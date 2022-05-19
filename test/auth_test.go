@@ -16,11 +16,9 @@ func TestTerraformSimplePool(t *testing.T) {
 	name := "test"
 	user_attributes := []map[string]interface{}{
 		{
-			"name":                     "rut",
-			"attribute_data_type":      "String",
-			"mutable":                  true,
-			"required":                 false,
-			"developer_only_attribute": false,
+			"name":                "rut",
+			"attribute_data_type": "String",
+			"mutable":             true,
 		},
 	}
 	password_policy := []map[string]interface{}{
@@ -38,7 +36,11 @@ func TestTerraformSimplePool(t *testing.T) {
 		"project":     "Karibu Labs",
 		"customer":    "Karibu",
 	}
-
+	invite_message := map[string]string{
+		"email_message": "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}.",
+		"email_subject": "Nueva cuenta de usuario",
+		"sms_message":   "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}.",
+	}
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../",
 		Vars: map[string]interface{}{
@@ -48,6 +50,7 @@ func TestTerraformSimplePool(t *testing.T) {
 			"user_attributes":    user_attributes,
 			"password_policy":    password_policy,
 			"common_tags":        common_tags,
+			"invite_message":     invite_message,
 		},
 		BackendConfig: map[string]interface{}{
 			"bucket": os.Getenv("AWS_BACKEND_BUCKET"),

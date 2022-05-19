@@ -23,3 +23,11 @@ variable "password_policy" {
 variable "common_tags" {
   type = map(any)
 }
+
+variable "invite_message" {
+  type = object({
+    email_message = string
+    email_subject = string
+    sms_message   = string
+  })
+}

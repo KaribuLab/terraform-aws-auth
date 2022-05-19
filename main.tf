@@ -3,14 +3,13 @@ terraform {
 }
 
 resource "aws_cognito_user_pool" "auth" {
-  name                     = "${var.customer_prefix}-${var.name}-pool-${var.environment_suffix}"
-  username_attributes      = ["email"]
-  auto_verified_attributes = ["email"]
+  name                = "${var.customer_prefix}-${var.name}-pool-${var.environment_suffix}"
+  username_attributes = ["email"]
   admin_create_user_config {
     invite_message_template {
-      email_message = "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}."
-      email_subject = "Nueva cuenta de usuario"
-      sms_message   = "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}."
+      email_message = var.invite_message.email_message
+      email_subject = var.invite_message.email_subject
+      sms_message   = var.invite_message.sms_message
     }
     allow_admin_create_user_only = false
   }
@@ -26,10 +25,10 @@ resource "aws_cognito_user_pool" "auth" {
     for_each = var.user_attributes
     content {
       attribute_data_type      = lookup(schema.value, "attribute_data_type")
-      developer_only_attribute = lookup(schema.value, "developer_only_attribute")
-      mutable                  = lookup(schema.value, "mutable")
       name                     = lookup(schema.value, "name")
-      required                 = lookup(schema.value, "required")
+      developer_only_attribute = lookup(schema.value, "developer_only_attribute", false)
+      mutable                  = lookup(schema.value, "mutable", false)
+      required                 = false
     }
   }
 
@@ -37,11 +36,11 @@ resource "aws_cognito_user_pool" "auth" {
     for_each = var.password_policy
     content {
       minimum_length                   = lookup(password_policy.value, "minimum_length")
-      require_lowercase                = lookup(password_policy.value, "require_lowercase")
-      require_numbers                  = lookup(password_policy.value, "require_numbers")
-      require_symbols                  = lookup(password_policy.value, "require_symbols")
-      require_uppercase                = lookup(password_policy.value, "require_uppercase")
-      temporary_password_validity_days = lookup(password_policy.value, "temporary_password_validity_days")
+      require_lowercase                = lookup(password_policy.value, "require_lowercase", false)
+      require_numbers                  = lookup(password_policy.value, "require_numbers", false)
+      require_symbols                  = lookup(password_policy.value, "require_symbols", false)
+      require_uppercase                = lookup(password_policy.value, "require_uppercase", false)
+      temporary_password_validity_days = lookup(password_policy.value, "temporary_password_validity_days", 1)
     }
   }
 
