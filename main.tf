@@ -11,7 +11,13 @@ resource "aws_cognito_user_pool" "auth" {
       email_subject = var.invite_message.email_subject
       sms_message   = var.invite_message.sms_message
     }
-    allow_admin_create_user_only = false
+    allow_admin_create_user_only = true
+  }
+
+  verification_message_template {
+    email_message = var.verification_message.email_message
+    email_subject = var.verification_message.email_subject
+    sms_message   = var.verification_message.sms_message
   }
 
   account_recovery_setting {

@@ -37,20 +37,26 @@ func TestTerraformSimplePool(t *testing.T) {
 		"customer":    "Karibu",
 	}
 	invite_message := map[string]string{
-		"email_message": "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}.",
+		"email_message": "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}",
 		"email_subject": "Nueva cuenta de usuario",
-		"sms_message":   "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}.",
+		"sms_message":   "Su nueva cuenta {username} ha sido creada. Para iniciar sesión su contraseña temporal es: {####}",
+	}
+	verification_message := map[string]string{
+		"email_message": "Su código de verificación de email es: {####}",
+		"email_subject": "Código de verificación de email",
+		"sms_message":   "Su código de verificación de email es: {####}",
 	}
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../",
 		Vars: map[string]interface{}{
-			"customer_prefix":    customer_prefix,
-			"environment_suffix": environment_suffix,
-			"name":               name,
-			"user_attributes":    user_attributes,
-			"password_policy":    password_policy,
-			"common_tags":        common_tags,
-			"invite_message":     invite_message,
+			"customer_prefix":      customer_prefix,
+			"environment_suffix":   environment_suffix,
+			"name":                 name,
+			"user_attributes":      user_attributes,
+			"password_policy":      password_policy,
+			"common_tags":          common_tags,
+			"invite_message":       invite_message,
+			"verification_message": verification_message,
 		},
 		BackendConfig: map[string]interface{}{
 			"bucket": os.Getenv("AWS_BACKEND_BUCKET"),

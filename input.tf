@@ -31,3 +31,11 @@ variable "invite_message" {
     sms_message   = string
   })
 }
+
+variable "verification_message" {
+  type = object({
+    email_message = string
+    email_subject = string
+    sms_message   = string
+  })
+}
